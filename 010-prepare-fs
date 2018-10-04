@@ -1,0 +1,50 @@
+#!/bin/sh
+
+if [ $# -lt 1 ]
+then
+  echo "Usage: $0 <device>"
+  exit 1
+fi
+hdd=$1
+
+echo "Start preparing for $hdd"
+
+
+#sgdisk -Z "$hdd"
+
+exit
+
+sgdisk -n 0:0:+512MiB -t 0:ef00 -c 0:"EFI System Partition" /dev/sda
+sgdisk -n 0:0:+4096MiB -t 0:8200 -c 0:"Linux Swap Partition" /dev/sda
+sgdisk -n 0:0:0 -t 0:8300 -c 0:"Linux Filesystem" /dev/sda
+sgdisk -p /dev/sda
+
+mkswap /dev/sda2
+swapon /dev/sda2
+
+mkfs.vfat -F32 /dev/sda1
+
+mkfs.btrfs -L tank /dev/sda3
+
+mount -o compress=lzo,relatime,space_cache,autodefrag /dev/sda3 /mnt
+
+btrfs subvolume create /mnt/arch
+btrfs subvolume create /mnt/arch/root
+btrfs subvolume create /mnt/arch/home
+umount /mnt
+
+mount -o compress=lzo,relatime,autodefrag,space_cache,subvol=arch/root /dev/sda3 /mnt
+mkdir -p /mnt/{boot,home}
+mount -o compress=lzo,relatime,autodefrag,space_cache,subvol=arch/home /dev/sda3 /mnt/home
+mount /dev/sda1 /mnt/boot
+
+sda1_UUID=`lsblk -rno UUID /dev/sda1`
+sda2_UUID=`lsblk -rno UUID /dev/sda2`
+sda3_UUID=`lsblk -rno UUID /dev/sda3`
+
+cat >../fstab_text <<EOT
+UUID=${sda3_UUID}	/	btrfs	compress=lzo,relatime,autodefrag,space_cache,subvol=arch/root	0	0
+UUID=${sda3_UUID}	/home	btrfs	compress=lzo,relatime,autodefrag,space_cache,subvol=arch/home	0	0
+UUID=${sda2_UUID}	none	swap	defaults	0	0
+UUID=${sda1_UUID}	/boot	vfat	relatime,fmask=0022,dmask=0022,codepage=437,iocharset=iso8859-1,shortname=mixed,errors=remount-ro	0	2
+EOT
