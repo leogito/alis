@@ -1,0 +1,60 @@
+#!/bin/sh
+
+echo '#!/bin/bash
+
+ln -sf /usr/share/zoneinfo/Asia/Novosibirsk /etc/localtime
+hwclock --systohc
+
+echo "alnew-pc" > /etc/hostname 
+
+cat >>/etc/locale.gen <<EOT
+en_US.UTF-8 UTF-8
+ru_RU.UTF-8 UTF-8
+EOT
+
+cat >/etc/locale.conf <<EOT
+LANG="ru_RU.UTF-8"
+EOT
+
+locale-gen
+
+cat >/etc/vconsole.conf <<EOT
+KEYMAP=ru
+FONT=cyr-sun16
+EOT
+
+# здесь заэкранированы одиночные кавычки 
+sed -i -r '\''s/^#+\s*(%wheel\s+ALL=\(ALL\)\s+ALL)$/\1/g'\'' /etc/sudoers
+sed -i -r '\''s/^#+\s*(%sudo\s+ALL=\(ALL\)\s+ALL)$/\1/g'\'' /etc/sudoers
+
+read -p "Username: " username
+read -s -p "Password: " userpassword
+echo
+read -s -p "ROOT PASSWORD: " rootpassword
+
+
+useradd -m -g users -G wheel,power,storage,network,audio,video -s /bin/bash "$username"
+#useradd -m -g users -s /bin/bash user
+#passwd --delete user
+
+echo "${username}:${userpassword}" | chpasswd
+echo "root:${rootpassword}" | chpasswd
+
+systemctl enable NetworkManager.service
+
+#-------------------- EFI
+pacman -S grub efibootmgr intel-ucode --noconfirm --needed
+grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=arch_grub --recheck
+
+#-------------------- GPT BIOS
+#pacman -S grub intel-ucode --noconfirm --needed
+#grub-install --target=i386-pc --recheck /dev/sda
+#-------------------- 
+
+grub-mkconfig -o /boot/grub/grub.cfg
+
+' >> /mnt/root/30-arch-chroot.sh
+
+chmod 700 /mnt/root/30-arch-chroot.sh
+
+arch-chroot /mnt /root/30-arch-chroot.sh
