@@ -31,7 +31,7 @@ read -p "Username: " username
 read -s -p "Password: " userpassword
 echo
 read -s -p "ROOT PASSWORD: " rootpassword
-
+echo
 
 useradd -m -g users -G wheel,power,storage,network,audio,video -s /bin/bash "$username"
 #useradd -m -g users -s /bin/bash user
@@ -58,3 +58,5 @@ grub-mkconfig -o /boot/grub/grub.cfg
 chmod 700 /mnt/root/30-arch-chroot.sh
 
 arch-chroot /mnt /root/30-arch-chroot.sh
+
+rm /root/30-arch-chroot.sh
