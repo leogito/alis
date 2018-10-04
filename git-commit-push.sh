@@ -21,5 +21,4 @@ git commit -m "Comment : $input on $curtime"
 
 git push -u origin master
 
-
 echo "Git Push Done"

@@ -39,6 +39,7 @@ mkdir -p /mnt/{.snapshots,boot,home,var/log,var/cache/pacman/pkg}
 mount -o relatime,compress=zstd,space_cache=v2,autodefrag,subvol=@home "${hdd}3" /mnt/home
 mount -o relatime,compress=zstd,space_cache=v2,autodefrag,subvol=@log "${hdd}3" /mnt/var/log
 mount -o relatime,compress=zstd,space_cache=v2,autodefrag,subvol=@pkg "${hdd}3" /mnt/var/cache/pacman/pkg
+mount -o relatime,compress=zstd,space_cache=v2,autodefrag,subvol=@snapshots "${hdd}3" /mnt/.snapshots
 
 mount /dev/sda1 /mnt/boot
 
@@ -55,6 +56,7 @@ UUID=${sda3_UUID}	/	btrfs	relatime,compress=zstd,space_cache=v2,autodefrag,subvo
 UUID=${sda3_UUID}	/home	btrfs	relatime,compress=zstd,space_cache=v2,autodefrag,subvol=@home	0	0
 UUID=${sda3_UUID}	/var/log	btrfs	relatime,compress=zstd,space_cache=v2,autodefrag,subvol=@log	0	0
 UUID=${sda3_UUID}	/var/cache/pacman/pkg	btrfs	relatime,compress=zstd,space_cache=v2,autodefrag,subvol=@pkg	0	0
+UUID=${sda3_UUID}	/.snapshots	btrfs	relatime,compress=zstd,space_cache=v2,autodefrag,subvol=@snapshots	0	0
 UUID=${sda2_UUID}	none	swap	defaults	0	0
 UUID=${sda1_UUID}	/boot	vfat	relatime,fmask=0022,dmask=0022,codepage=437,iocharset=iso8859-1,shortname=mixed,errors=remount-ro	0	2
 EOT
