@@ -5,42 +5,50 @@ then
   echo "Usage: $0 <device>"
   exit 1
 fi
+
 hdd=$1
 
 echo "Start preparing for $hdd"
 
+sgdisk -Z "$hdd"
+sgdisk -n 0:0:+512MiB -t 0:ef00 -c 0:"EFI System Partition" "$hdd"
+sgdisk -n 0:0:+4096MiB -t 0:8200 -c 0:"Linux Swap Partition" "$hdd"
+sgdisk -n 0:0:0 -t 0:8300 -c 0:"Linux Filesystem" "$hdd"
+sgdisk -p "$hdd"
 
-#sgdisk -Z "$hdd"
+mkswap "${hdd}2"
+swapon "${hdd}2"
 
-exit
+mkfs.vfat -F32 "${hdd}1"
 
-sgdisk -n 0:0:+512MiB -t 0:ef00 -c 0:"EFI System Partition" /dev/sda
-sgdisk -n 0:0:+4096MiB -t 0:8200 -c 0:"Linux Swap Partition" /dev/sda
-sgdisk -n 0:0:0 -t 0:8300 -c 0:"Linux Filesystem" /dev/sda
-sgdisk -p /dev/sda
+mkfs.btrfs -L tank "${hdd}3"
 
-mkswap /dev/sda2
-swapon /dev/sda2
+mount -o relatime,compress=zstd,space_cache=v2,autodefrag "${hdd}3" /mnt
 
-mkfs.vfat -F32 /dev/sda1
+btrfs subvolume create /mnt/@
+btrfs subvolume create /mnt/@root
+btrfs subvolume create /mnt/@home
+btrfs subvolume create /mnt/@pkg
+btrfs subvolume create /mnt/@log
+btrfs subvolume create /mnt/@snapshots
 
-mkfs.btrfs -L tank /dev/sda3
-
-mount -o compress=lzo,relatime,space_cache,autodefrag /dev/sda3 /mnt
-
-btrfs subvolume create /mnt/arch
-btrfs subvolume create /mnt/arch/root
-btrfs subvolume create /mnt/arch/home
 umount /mnt
 
-mount -o compress=lzo,relatime,autodefrag,space_cache,subvol=arch/root /dev/sda3 /mnt
-mkdir -p /mnt/{boot,home}
-mount -o compress=lzo,relatime,autodefrag,space_cache,subvol=arch/home /dev/sda3 /mnt/home
+mount -o relatime,compress=zstd,space_cache=v2,autodefrag,subvol=@root "${hdd}3" /mnt
+mkdir -p /mnt/{.snapshots,boot,home,var/log,var/cache/pacman/pkg}
+mount -o relatime,compress=zstd,space_cache=v2,autodefrag,subvol=@home "${hdd}3" /mnt/home
+mount -o relatime,compress=zstd,space_cache=v2,autodefrag,subvol=@log "${hdd}3" /mnt/var/log
+mount -o relatime,compress=zstd,space_cache=v2,autodefrag,subvol=@pkg "${hdd}3" /mnt/var/cache/pacman/pkg
+
 mount /dev/sda1 /mnt/boot
 
-sda1_UUID=`lsblk -rno UUID /dev/sda1`
-sda2_UUID=`lsblk -rno UUID /dev/sda2`
-sda3_UUID=`lsblk -rno UUID /dev/sda3`
+#sda1_UUID=`lsblk -rno UUID /dev/sda1`
+#sda2_UUID=`lsblk -rno UUID /dev/sda2`
+#sda3_UUID=`lsblk -rno UUID /dev/sda3`
+
+sda1_UUID=`lsblk -rno UUID ${hdd}1`
+sda2_UUID=`lsblk -rno UUID ${hdd}2`
+sda3_UUID=`lsblk -rno UUID ${hdd}3`
 
 cat >../fstab_text <<EOT
 UUID=${sda3_UUID}	/	btrfs	compress=lzo,relatime,autodefrag,space_cache,subvol=arch/root	0	0
