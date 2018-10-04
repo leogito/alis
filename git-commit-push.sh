@@ -1,8 +1,6 @@
 #!/bin/bash
 #set -e
 
-# checking if I have the latest files from github
-
 echo "Checking for newer files online first"
 git pull
 
@@ -16,7 +14,8 @@ read input
 
 # Committing to the local repository with a message containing the time details and commit text
 
-git commit -m "$input"
+curtime=$(date)
+git commit -m "Comment : $input on $curtime"
 
 # Push the local files to github
 
