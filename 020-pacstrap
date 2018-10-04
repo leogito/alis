@@ -1,0 +1,19 @@
+#!/bin/sh
+
+cat >/etc/pacman.d/mirrorlist <<EOT
+Server = http://mirror.yandex.ru/archlinux/\$repo/os/\$arch
+Server = http://mirror.vpsfree.cz/archlinux/\$repo/os/\$arch
+Server = http://mirror.rol.ru/archlinux/\$repo/os/\$arch
+Server = http://ftp.portlane.com/pub/os/linux/archlinux/\$repo/os/\$arch
+Server = http://archmirror.tomforb.es/\$repo/os/\$arch
+Server = http://mirror.f4st.host/archlinux/\$repo/os/\$arch
+EOT
+
+mv /var/cache/pacman/pkg/* /mnt//var/cache/pacman/pkg
+rm -rf /var/cache/pacman/pkg
+ln -s /mnt/var/cache/pacman/pkg /var/cache/pacman/pkg
+
+pacstrap /mnt base base-devel btrfs-progs net-tools nfs-utils networkmanager openssh bash-completion mc
+
+cat ../fstab_text >> /mnt/etc/fstab
+
