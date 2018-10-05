@@ -53,6 +53,11 @@ grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=arch_grub
 
 grub-mkconfig -o /boot/grub/grub.cfg
 
+# для Virtualbox сделаем копию загрузчика (иначе Virtualbox его может не найти)
+
+mkdir /boot/EFI/boot
+cp /boot/EFI/arch_grub/grubx64.efi /boot/EFI/boot/bootx64.efi
+
 ' >> /mnt/root/30-arch-chroot.sh
 
 chmod 700 /mnt/root/30-arch-chroot.sh
