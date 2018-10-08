@@ -42,6 +42,8 @@ echo "root:${rootpassword}" | chpasswd
 
 systemctl enable NetworkManager.service
 
+pacman -S git htop neofetch --noconfirm --needed
+
 #-------------------- EFI
 pacman -S grub efibootmgr intel-ucode --noconfirm --needed
 grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=arch_grub --recheck
