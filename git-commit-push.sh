@@ -1,6 +1,10 @@
 #!/bin/bash
 #set -e
 
+git config --global user.email "leogito@mail.ru"
+git config --global user.name "leogito"
+
+
 echo "Checking for newer files online first"
 git pull
 

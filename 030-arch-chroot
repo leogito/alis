@@ -64,4 +64,4 @@ chmod 700 /mnt/root/30-arch-chroot.sh
 
 arch-chroot /mnt /root/30-arch-chroot.sh
 
-rm /root/30-arch-chroot.sh
+rm /mnt/root/30-arch-chroot.sh
