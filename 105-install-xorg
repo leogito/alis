@@ -1,0 +1,8 @@
+#!/bin/bash
+set -e
+
+echo "Start running $(basename $0)"
+
+sudo pacman -S xorg-server xorg-apps xorg-xinit xorg-twm xterm --noconfirm --needed
+
+echo "End running $(basename $0)" 

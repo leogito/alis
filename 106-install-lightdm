@@ -1,0 +1,9 @@
+#!/bin/bash
+set -e
+
+echo "Start running $(basename $0)"
+
+sudo pacman -S lightdm lightdm-gtk-greeter lightdm-gtk-greeter-settings --noconfirm --needed
+sudo systemctl enable lightdm.service
+
+echo "End running $(basename $0)"
