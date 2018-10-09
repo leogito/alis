@@ -1,0 +1,8 @@
+#!/bin/bash
+set -e
+
+echo "Start running $(basename $0)"
+
+sudo pacman -S arc-gtk-theme noto-fonts --needed --noconfirm
+
+echo "End running $(basename $0)"
