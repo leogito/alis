@@ -1,0 +1,13 @@
+#!/bin/bash
+set -e
+
+echo "Start running $(basename $0)"
+
+./041-add-multilib-repo
+./041-add-archlinuxfr-repo
+
+sudo pacman -Sy
+
+
+
+echo "End running $(basename $0)"
