@@ -1,0 +1,20 @@
+#!/bin/sh
+set -e
+
+if [ $# -lt 1 ]
+then
+    echo "Usage: $0 <package...>"
+    exit 1
+else
+    for pkg in $1
+    do
+	if pacman -Qi $pkg &> /dev/null; then
+	    echo
+	    echo ""$pkg" is already installed"
+	    echo
+	else
+	    sudo pacman -S $pkg --noconfirm --needed
+	fi
+    done
+fi
+

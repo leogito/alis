@@ -1,0 +1,14 @@
+#!/bin/bash
+set -e
+
+echo "Start running $(basename $0)"
+
+cd /tmp
+git clone https://aur.archlinux.org/trizen.git
+cd trizen
+makepkg -si
+
+cd ..
+rm -dR trizen
+
+echo "End running $(basename $0)"

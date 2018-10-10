@@ -3,11 +3,10 @@ set -e
 
 echo "Start running $(basename $0)"
 
-./041-add-multilib-repo
-./041-add-archlinuxfr-repo
+#./041-add-multilib-repo
 
 sudo pacman -Sy
 
-
+./042-install-aur-tools
 
 echo "End running $(basename $0)"
