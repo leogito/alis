@@ -3,12 +3,32 @@ set -e
 
 echo "Start running $(basename $0)"
 
-cd /tmp
-git clone https://aur.archlinux.org/trizen.git
-cd trizen
-makepkg -si
+#cd /tmp
+#git clone https://aur.archlinux.org/trizen.git
+#cd trizen
+#makepkg -si
+#cd ..
+#rm -dR trizen
 
-cd ..
-rm -dR trizen
+echo "Add arcolinux_repo_iso repository"
+
+echo '
+[arcolinux_repo_iso]
+SigLevel = Never
+Server = https://arcolinux.github.io/arcolinux_repo_iso/$arch' | sudo tee --append /etc/pacman.conf > /dev/null
+
+sudo pacman -Sy
+
+echo "Install AUR tools"
+
+pkgs="yaourt package-query yay-bin trizen"
+
+./999-install-software-arch-linux-repo "$pkgs"
+
+echo "Remove arcolinux_repo_iso repository"
+
+sudo sed -i "/\[arcolinux_repo_iso\]/,/Server/"'d' ./pacman.conf
+
+sudo pacman -Sy
 
 echo "End running $(basename $0)"

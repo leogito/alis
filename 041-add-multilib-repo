@@ -3,8 +3,10 @@ set -e
 
 echo "Start running $(basename $0)"
 
-echo '
-[multilib]
-Include = /etc/pacman.d/mirrorlist' | sudo tee --append /etc/pacman.conf > /dev/null
+#echo '
+#[multilib]
+#Include = /etc/pacman.d/mirrorlist' | sudo tee --append /etc/pacman.conf > /dev/null
+
+sudo sed -i "/\[multilib\]/,/Include/"'s/^#//' /etc/pacman.conf
 
 echo "End running $(basename $0)"

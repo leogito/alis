@@ -3,8 +3,6 @@ set -e
 
 echo "Start running $(basename $0)"
 
-#sudo pacman -S termite guake --noconfirm --needed 
-
 pkgs="termite guake"
 
 ./999-install-software-arch-linux-repo "$pkgs"

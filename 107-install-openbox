@@ -3,6 +3,9 @@ set -e
 
 echo "Start running $(basename $0)"
 
-sudo pacman -S openbox --needed --noconfirm
+#sudo pacman -S openbox --needed --noconfirm
+pkgs="openbox obconf obmenu openbox-themes"
+
+./999-install-software-arch-linux-repo "$pkgs"
 
 echo "End running $(basename $0)"
