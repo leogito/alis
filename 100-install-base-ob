@@ -3,8 +3,9 @@ set -e
 
 echo "Start running $(basename $0)"
 
-./041-add-multilib-repo
-./041-install-aur-tools
-./042-virtualbox-guest
+./105-install-xorg
+./106-install-lightdm
+./106-customize-lightdm
+./107-install-openbox
 
 echo "End running $(basename $0)"

@@ -3,8 +3,6 @@ set -e
 
 echo "Start running $(basename $0)"
 
-./041-add-multilib-repo
-./041-install-aur-tools
-./042-virtualbox-guest
+sudo pacman -S virtualbox-guest-modules-arch virtualbox-guest-utils --noconfirm --needed
 
 echo "End running $(basename $0)"
