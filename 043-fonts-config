@@ -1,0 +1,43 @@
+#!/bin/bash
+set -e
+
+echo "Start running $(basename $0)"
+
+#sudo pacman -S virtualbox-guest-modules-arch virtualbox-guest-utils --noconfirm --needed
+
+#[ ! -e /etc/fonts/conf.d/10-hinting-slight.conf ] && echo "Found" || echo "Not found"
+
+create_symlink()
+{
+    filename=$1
+    
+    if [ ! -e "/etc/fonts/conf.d/$filename" ]; then
+	if [ ! -e "/etc/fonts/conf.avail/$filename" ]; then
+	    echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+	    echo "File not found \"/etc/fonts/conf.d/$filename\""
+	    echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+        else
+	    sudo ln -s /etc/fonts/conf.avail/$filename /etc/fonts/conf.d
+            echo "Symlink created \"/etc/fonts/conf.d/$filename\""
+	fi
+    else
+        echo "Symlink already exists \"/etc/fonts/conf.d/$filename\""
+    fi
+}
+
+cp -f ./files/etc/fonts/local.conf /etc/fonts/local.conf
+cp -f ./files/etc/X11/xinit/.Xresources /etc/X11/xinit/.Xresources
+
+# lightdm его ищет тут - /etc/X11/Xresources
+# а startx /etc/X11/xinit/.Xresources
+#
+if [ ! -e "/etc/X11/Xresources" ]; then
+    sudo ln -s ./xinit/.Xresources /etc/X11/Xresources
+fi
+
+create_symlink "10-hinting-slight.conf"
+create_symlink "10-sub-pixel-rgb.conf"
+create_symlink "11-lcdfilter-light.conf"
+
+echo "End running $(basename $0)"
+
