@@ -1,0 +1,20 @@
+#!/bin/bash
+set -e
+
+echo "Start running $(basename $0)"
+
+sudo pacman -S kdebase plasma kdeplasma-addons --noconfirm --needed
+##kde-l10n-ru 
+sudo pacman -S kinfocenter kwalletmanager kdegraphics-thumbnailers dolphin-plugins --noconfirm --needed
+
+sudo pacman -S breeze-gtk kde-gtk-config --noconfirm --needed
+##sudo mv -vi /usr/share/mime/packages/kde.xml /usr/share/mime/packages/kde.xml.bak
+
+sudo pacman -S ark gwenview okular --noconfirm --needed
+sudo pacman -S ttf-freefont --noconfirm --needed
+sudo pacman -S pulseaudio --noconfirm --needed
+sudo pacman -S xdg-user-dirs --noconfirm --needed
+
+sudo pacman -R konqueror --noconfirm
+
+echo "End running $(basename $0)" 

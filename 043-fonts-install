@@ -1,0 +1,15 @@
+#!/bin/bash
+set -e
+
+echo "Start running $(basename $0)"
+
+#sudo pacman -S virtualbox-guest-modules-arch virtualbox-guest-utils --noconfirm --needed
+
+#[ ! -e /etc/fonts/conf.d/10-hinting-slight.conf ] && echo "Found" || echo "Not found"
+
+sudo pacman -S wget ttf-bitstream-vera ttf-croscore ttf-dejavu ttf-ubuntu-font-family ttf-inconsolata ttf-liberation ttf-roboto cpio noto-fonts noto-fonts-emoji noto-fonts-extra --noconfirm
+
+yay -S ttf-carlito ttf-caladea ttf-droid-sans-mono-slashed-powerline-git otf-san-francisco --noconfirm
+
+echo "End running $(basename $0)"
+

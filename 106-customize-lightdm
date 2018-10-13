@@ -9,7 +9,7 @@ sudo mkdir /home/.anyfiles
 sudo chown root:users /home/.anyfiles
 sudo chmod 755 /home/.anyfiles
 
-sudo cp ./files/.anyfiles/archlinux-128x128.png /home/.anyfiles
+sudo cp ./files/home/.anyfiles/archlinux-128x128.png /home/.anyfiles
 sudo mv /etc/lightdm/lightdm-gtk-greeter.conf /etc/lightdm/lightdm-gtk-greeter.conf.bak
 sudo cp ./files/etc/lightdm/lightdm-gtk-greeter.conf /etc/lightdm/lightdm-gtk-greeter.conf
 
