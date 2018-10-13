@@ -27,7 +27,7 @@ pkgs="yaourt package-query yay-bin trizen"
 
 echo "Remove arcolinux_repo_iso repository"
 
-sudo sed -i "/\[arcolinux_repo_iso\]/,/Server/"'d' ./pacman.conf
+sudo sed -i "/\[arcolinux_repo_iso\]/,/Server/"'d' /etc/pacman.conf
 
 sudo pacman -Sy
 

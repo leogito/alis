@@ -7,6 +7,18 @@ echo "Start running $(basename $0)"
 
 #[ ! -e /etc/fonts/conf.d/10-hinting-slight.conf ] && echo "Found" || echo "Not found"
 
+sudo pacman -S fontconfig --noconfirm --needed
+
+sudo cp -f ./files/etc/fonts/local.conf /etc/fonts/local.conf
+sudo cp -f ./files/etc/X11/xinit/.Xresources /etc/X11/xinit/.Xresources
+
+# lightdm его ищет тут - /etc/X11/Xresources
+# а startx /etc/X11/xinit/.Xresources
+#
+if [ ! -e "/etc/X11/Xresources" ]; then
+    sudo ln -s ./xinit/.Xresources /etc/X11/Xresources
+fi
+
 create_symlink()
 {
     filename=$1
@@ -24,16 +36,6 @@ create_symlink()
         echo "Symlink already exists \"/etc/fonts/conf.d/$filename\""
     fi
 }
-
-cp -f ./files/etc/fonts/local.conf /etc/fonts/local.conf
-cp -f ./files/etc/X11/xinit/.Xresources /etc/X11/xinit/.Xresources
-
-# lightdm его ищет тут - /etc/X11/Xresources
-# а startx /etc/X11/xinit/.Xresources
-#
-if [ ! -e "/etc/X11/Xresources" ]; then
-    sudo ln -s ./xinit/.Xresources /etc/X11/Xresources
-fi
 
 create_symlink "10-hinting-slight.conf"
 create_symlink "10-sub-pixel-rgb.conf"
